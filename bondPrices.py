@@ -1,3 +1,6 @@
+## 3D plot of the coupon-bearing CAT bond price for the Burr claim amounts and a non-homogeneous Poisson process governing the flow of losses.
+
+
 import numpy as np
 import scipy.stats as stats
 
@@ -226,3 +229,54 @@ def sim_nhpp_alp(lambda_type, parlambda, distrib, params, T, N):
                     losses[aux:, i] = 0
 
     return np.dstack((poisproc, losses))
+
+
+## Main
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# parlambda for NHPP1
+parlambda = [35.32, 2.32 * 2 * np.pi, -0.2]
+# distribution and parameters for Burr
+distr = "Burr"
+params = [0.4801, 3.9495 * 1e16, 2.1524]
+
+# Load data
+data = pd.read_table("ncl.dat", header=None)
+A = np.mean(data.iloc[:, 2]) * (34.2 / 4)
+
+Z = 1
+C = 0.06
+
+na = 41  # default 41
+D = np.linspace(A, 12 * A, na)
+B = 0.25
+nb = 41  # default 41
+T = np.linspace(B, 8 * B, nb)
+Tmax = np.max(T)
+lambda_type = 0
+
+N = 1000  # default 1000
+r = np.log(1.025)
+
+# Compute bond coupon
+d1 = bond_coupon(Z, C, D, T, r, lambda_type, parlambda, distr, params, Tmax, N)
+y = d1[:, 0]
+x = d1[:, 1] / 1e9
+z = d1[:, 2]
+
+# Convert to DataFrame for plotting
+data_plot = pd.DataFrame({'x': x, 'y': y, 'z': z})
+
+# Plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_trisurf(data_plot['x'], data_plot['y'], data_plot['z'], cmap='viridis')
+
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
+
+plt.show()
