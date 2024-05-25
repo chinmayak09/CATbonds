@@ -1,4 +1,4 @@
-# '3D plot of the CAT bond price, for the bond paying only coupons, for the Burr claim amounts and a non-homogeneous Poisson process governing the flow of losses.'
+## 3D plot of the CAT bond price, for the bond paying only coupons, for the Burr claim amounts and a non-homogeneous Poisson process governing the flow of losses.
 
 
 import numpy as np
