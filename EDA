@@ -1,0 +1,49 @@
+# Import necessary libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Read the data from the file
+data = pd.read_table("ncl.dat", delim_whitespace=True, header=None, names=["Year", "Claim_Count", "Claim_Amount"])
+
+# Adjust the year by adding 1990
+data["Year"] = data["Year"] + 1990
+
+# Divide the third column by 1e+09
+data["Claim_Amount"] = data["Claim_Amount"] / 1e+09
+
+# Print the first few rows of the data
+print(data.head())
+
+# Summary statistics
+print(data.describe())
+
+# Line plot
+plt.figure(figsize=(10, 6))
+plt.plot(data["Year"], data["Claim_Amount"], color="blue", linewidth=2)
+plt.xlabel("Years", fontsize=14)
+plt.ylabel("Adjusted PCS catastrophe claims (USD billion)", fontsize=14)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.title("Trend of Adjusted PCS Catastrophe Claims", fontsize=16)
+plt.show()
+
+# Scatter plot
+plt.figure(figsize=(10, 6))
+plt.scatter(data["Year"], data["Claim_Amount"], color="green", s=50)
+plt.xlabel("Years", fontsize=14)
+plt.ylabel("Adjusted PCS catastrophe claims (USD billion)", fontsize=14)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.title("Scatter Plot of Adjusted PCS Catastrophe Claims", fontsize=16)
+plt.show()
+
+# Histogram
+plt.figure(figsize=(10, 6))
+sns.histplot(data["Claim_Amount"], kde=True, color="orange")
+plt.xlabel("Adjusted PCS catastrophe claims (USD billion)", fontsize=14)
+plt.ylabel("Frequency", fontsize=14)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.title("Distribution of Adjusted PCS Catastrophe Claims", fontsize=16)
+plt.show()
