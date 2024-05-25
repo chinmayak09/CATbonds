@@ -197,3 +197,59 @@ def simNHPPALP(lambd, parlambd, distrib, params, T, N):
     
     out = np.dstack((poisproc, losses))
     return out
+
+
+## Main
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# Function placeholder
+def bond_zero_coupon(Z, D, T, r, lambda_type, parlambda, distr, params, Tmax, N):
+    # This function needs to be implemented or replaced with the appropriate computation.
+    # For now, we return a dummy array with the right shape.
+    return np.random.rand(len(D) * len(T), 3)
+
+# Parameters
+parlambda = [35.32, 2.32 * 2 * np.pi, -0.2]  # NHPP1
+distr = "Burr"  # 'lognormal'
+params = [0.4801, 3.9495 * 1e16, 2.1524]  # Burr
+
+# Load data
+data = pd.read_table("ncl.dat", header=None)
+A = np.mean(data.iloc[:, 2]) * (34.2 / 4)
+
+# Define grid parameters
+na = 41  # default 41
+D = np.linspace(A, 12 * A, na)
+B = 0.25
+nb = 41  # default 41
+T = np.linspace(B, 8 * B, nb)
+Tmax = np.max(T)
+lambda_type = 0
+N = 1000  # default 1000
+r = np.log(1.025)
+Z = 1.06
+
+# Compute bond zero coupon values
+d1 = bond_zero_coupon(Z, D, T, r, lambda_type, parlambda, distr, params, Tmax, N)
+y = d1[:, 0]
+x = d1[:, 1] / 1e9
+z = d1[:, 2]
+
+# Create a DataFrame for plotting
+data_plot = pd.DataFrame({'x': x, 'y': y, 'z': z})
+
+# Plotting
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_trisurf(data_plot['x'], data_plot['y'], data_plot['z'], cmap='viridis')
+
+# Labels and formatting
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
+ax.set_title('Zero-Coupon CAT Bond Price')
+
+plt.show()
